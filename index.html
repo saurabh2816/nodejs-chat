@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Chat</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="container">
+      <div id='namesWrapper'>
+        <h2>Chat IO</h2>
+        <p>Create Username :</p>
+        <form id='usernameForm'>
+          <input size='40' id='username'>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+
+      <div id='mainWrapper'>
+        <h2>Chat IO</h2>
+        <div id="chatWrapper">
+          <div id="chatWindow"></div>
+          <form id='messageForm'>
+            <input size='40' id='message' placeholder="type something...">
+            <input type="submit" value="Send">
+          </form>
+        </div>
+
+        <div id="userWrapper">
+          <div id="users"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- this socket.io.js file doesn't actually exists. This will actually be served up by socket.io because when
+    we give them a http server to listen on , they basically create a route which listens for a GET request to this url.
+    And they'll server up some javascript which will be used to connect to the server
+    -->
+    <script>
+      $(function() {
+        var socket = io.connect(); // 'io' is created in global window scope when we rquire the socket.io/socket.io.js file
+        var $messageForm = $('#messageForm');
+        var $message = $('#message');
+        var $chat = $('#chatWindow');
+        var $usernameForm = $('#usernameForm');
+        var $users = $('#users');
+        var $username = $('#username');
+        var $error = $('#error');
+
+        $usernameForm.submit(function(e) {
+          e.preventDefault();
+          socket.emit('new user', $username.val(), function(data) {
+            if(data) {
+              $('#namesWrapper').hide();
+              $('#mainWrapper').show();
+            } else {
+              $error.html('Username already taken');
+            }
+          });
+          $username.val('');
+        });
+
+        socket.on('usernames', function(data) {
+          var html = "";
+          for(i=0; i<data.length; i++)
+            html += data[i] + '<br>';
+          $users.html(html);
+        });
+
+        $messageForm.submit(function(e) {
+          e.preventDefault();     //If this method is called, the default action of the event will not be triggered
+          socket.emit('send message', $message.val());
+          $message.val(''); //after message is show, clear the message
+        });
+
+      // if there is a new message at the server (sent by any other user) append it to the chatarea
+      socket.on('new message', function(data) {
+        $chat.append('<strong>' + data.user + '</strong>: '+ data.msg + '<br>');
+      });
+    });
+
+    </script>
+
+  </body>
+</html>
