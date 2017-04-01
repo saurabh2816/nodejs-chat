@@ -2,9 +2,10 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Chat</title>
+    <title>Chat </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="animate.js"></script>
 
@@ -82,12 +83,12 @@
       <div id="error"></div>
 
       <div id='mainWrapper'>
-        <h2>Chat IO</h2>
+        <h1 style="font-family: 'Press Start 2P', cursive; margin: 25px 0 20px 0px; text-align: left;">Nodejs Chat App</h1>
         <div id="chatWrapper">
           <div id="chatWindow">
           </div>
           <form id='messageForm'>
-            <input size='40' type="text" id='message' placeholder="type something..." style="width: 415px;">
+            <input size='40' type="text" id='message' placeholder="type something..." style="width: 415px;" autocomplete="off">
             <input type="submit" value="Send" class="button button-block">
           </form>
         </div>
@@ -131,7 +132,7 @@
                 $('#error').show();
               }
               else {
-              $error.html('this'+ returnedUsername + 'This username is already taken');
+              $error.html('Ooops! Looks like ' +'<b>' + returnedUsername + '</b>' + ' is already taken!');
               $('#error').show();
               }
             }
@@ -159,7 +160,7 @@
 
       // if there is a new message at the server (sent by any other user) append it to the chatarea
       socket.on('new message', function(data) {
-             $chat.append('<div class="new_message">' + '<strong>' + data.user + '</strong>: '+  data.msg + '</div>' +'<br>');
+             $chat.append('<div class="new_message">' + '' + data.user + ' : '+  data.msg + '</div>' +'<br>');
            });
          });
 

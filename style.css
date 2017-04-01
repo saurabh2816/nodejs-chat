@@ -207,19 +207,11 @@ h4 {
 }
 
 
-
-
-
-
-
-
-
-
 .new_message {
     float: left;
     clear: both;
     line-height: 1.4em;
-    max-width: 224px;
+    /*max-width: 224px;*/
     margin: 3px;
     padding: 0.3em 6px;
     border-radius: 5px;
@@ -283,7 +275,8 @@ body {
 }*/
 
 #error {
-  float: left;
+  /*float: left;*/
+  text-align: center;
   border: 1px #ccc solid;
   border-radius: 10px;
   background: #ed7979;
@@ -293,11 +286,11 @@ body {
 }
 
 input[type="text"] {
-  height: 30px;
+  height: 40px;
   margin: 15px 20px;
   width: 50%;
   font-family: sans-serif;
-  font-size: 25px;
+  font-size: 15px;
   appearance: none;
   box-shadow: none;
   border-radius: none;
