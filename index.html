@@ -3,36 +3,102 @@
   <head>
     <meta charset="utf-8">
     <title>Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="style.css">
+    <script src="animate.js"></script>
+
   </head>
   <body>
     <div id="container">
       <div id='namesWrapper'>
-        <h2>Chat IO</h2>
-        <p>Create Username :</p>
-        <form id='usernameForm'>
-          <input size='40' id='username'>
+        <!-- <form id='usernameForm'>
+          <input size='40' id='username' placeholder="choose a username">
           <input type="submit" value="Submit">
-        </form>
-      </div>
+        </form> -->
+
+        <div class="form" id='usernameForm'>
+
+      <ul class="tab-group">
+        <li class="tab active"><a href="#signup">Sign Up</a></li>
+        <li class="tab"><a href="#about">About this Site</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div id="signup">
+          <h1>Sign Up for Node.js Chat</h1>
+          <form>
+          <div class="field-wrap">
+            <label>
+              Pick a Username<span class="req">*</span>
+            </label>
+            <input id='username' required autocomplete="off"/>
+          </div>
+
+          <button type="submit" value="Submit" class="button button-block"/>Get Started</button>
+
+          </form>
+
+        </div>
+
+        <div id="about">
+          <h1>A Real-Time Chat Application</h1>
+          <form action="/" method="post">
+
+            <div class="field-wrap">
+              <ul id="example4">
+                <h3>Server Side </h3>
+                <li>Node.js</li>
+                <li>Socket.io</li>
+                <li>Express</li>
+              </ul>
+            </div>
+
+             <div class="field-wrap">
+              <ul id="example4">
+                <h3>Client Side </h3>
+                <li>HTML</li>
+                <li>jQuery</li>
+                <li>CSS3</li>
+              </ul>
+            </div>
+
+              <h3>Get the code</h3>
+               <h4>https://github.com/saurabh2816/nodejs-chat</h4>
+              <h3>Run</h3>
+              <h4>node app.js</h4>
+               <h4>run localhost:8000</h4>
+
+          <p class="forgot"><a href="http://saurabhrana.me">Visit saurabhrana.me</a></p>
+          </form>
+        </div>
+
+      </div><!-- tab-content -->
+    </div> <!-- /form -->
+
+  </div>  <!--namewrapper end-->
+
+
+      <div id="error"></div>
 
       <div id='mainWrapper'>
         <h2>Chat IO</h2>
         <div id="chatWrapper">
-          <div id="chatWindow"></div>
+          <div id="chatWindow">
+          </div>
           <form id='messageForm'>
-            <input size='40' id='message' placeholder="type something...">
-            <input type="submit" value="Send">
+            <input size='40' type="text" id='message' placeholder="type something..." style="width: 415px;">
+            <input type="submit" value="Send" class="button button-block">
           </form>
         </div>
 
         <div id="userWrapper">
+          <div id="usersonline"></div>
           <div id="users"></div>
         </div>
       </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script></script>
     <script src="/socket.io/socket.io.js"></script>
     <!-- this socket.io.js file doesn't actually exists. This will actually be served up by socket.io because when
     we give them a http server to listen on , they basically create a route which listens for a GET request to this url.
@@ -45,41 +111,59 @@
         var $message = $('#message');
         var $chat = $('#chatWindow');
         var $usernameForm = $('#usernameForm');
-        var $users = $('#users');
+        // var $users = $('#users');
+        var  users = document.getElementById('users');
         var $username = $('#username');
+        var $usersonline = $('#usersonline');
         var $error = $('#error');
 
         $usernameForm.submit(function(e) {
           e.preventDefault();
-          socket.emit('new user', $username.val(), function(data) {
+          socket.emit('new user', $username.val(), function(data, returnedUsername) {
             if(data) {
               $('#namesWrapper').hide();
+              $('#error').hide();
               $('#mainWrapper').show();
             } else {
-              $error.html('Username already taken');
+              if(returnedUsername.toString() === "")
+              {
+                $error.html('Empty string not an acceptable username');
+                $('#error').show();
+              }
+              else {
+              $error.html('this'+ returnedUsername + 'This username is already taken');
+              $('#error').show();
+              }
             }
           });
-          $username.val('');
+              $username.val('');
         });
 
         socket.on('usernames', function(data) {
+
+
           var html = "";
           for(i=0; i<data.length; i++)
-            html += data[i] + '<br>';
-          $users.html(html);
+            html += '<font color="red">'+data[i] + '</font><br>';
+          users.innerHTML = html;
+          usersonline.innerHTML = "<h3> " + data.length + " users online </h3>";
+
         });
 
         $messageForm.submit(function(e) {
           e.preventDefault();     //If this method is called, the default action of the event will not be triggered
           socket.emit('send message', $message.val());
-          $message.val(''); //after message is show, clear the message
-        });
+          $message.val(''); //after message is shown, clear the message
+
+});
 
       // if there is a new message at the server (sent by any other user) append it to the chatarea
       socket.on('new message', function(data) {
-        $chat.append('<strong>' + data.user + '</strong>: '+ data.msg + '<br>');
-      });
-    });
+             $chat.append('<div class="new_message">' + '<strong>' + data.user + '</strong>: '+  data.msg + '</div>' +'<br>');
+           });
+         });
+
+
 
     </script>
 

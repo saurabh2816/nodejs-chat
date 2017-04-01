@@ -17,10 +17,10 @@ app.get('/', function(req, res) {
 
 io.sockets.on('connection', function(socket) {
   socket.on('new user', function(data, callback){
-    if(usernames.indexOf(data) != -1) //-1 if not found
-      callback(false);
+    if(usernames.indexOf(data) != -1 || data === "") //-1 if not found
+      callback(false, data);
     else {
-      callback(true);
+      callback(true, data);
       socket.username = data;
       usernames.push(socket.username);
       updateUsernames();

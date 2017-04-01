@@ -1,0 +1,1 @@
+check if another user exists, display error message, cannot add images or html to text message, new color to everyuser, user can't sent empty messages, message in chatbox when someone joins the room, styling could be better
