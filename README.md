@@ -1,4 +1,4 @@
 ## A Node.js chat application made with the socket.io
+Chat using Socket.io
 
-#### Reference
-devdocs.io/socketio/
+### Demo: [Live NodeJS Chat](https://tranquil-brook-39392.herokuapp.com/ "Live Chat")
